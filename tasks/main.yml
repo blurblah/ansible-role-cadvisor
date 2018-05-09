@@ -1,0 +1,17 @@
+---
+- import_tasks: check_system.yml
+
+- name: Run cAdvisor
+  docker_container:
+    name: cadvisor
+    image: 'google/cadvisor:{{ cadvisor_version }}'
+    ports:
+      - '{{ cadvisor_port }}:8080'
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    recreate: yes
+    restart_policy: unless-stopped
